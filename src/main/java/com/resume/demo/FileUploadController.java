@@ -6,12 +6,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import org.apache.tika.exception.TikaException;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/upload")
 public class FileUploadController {
 
     @PostMapping("/resume")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws TikaException {
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException, TikaException {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File is empty");
         }
@@ -27,9 +29,15 @@ public class FileUploadController {
             }
 
             String email = DataExtractor.extractEmail(extractedText);
-            // Extract other details similarly
+            String phoneNumber = DataExtractor.extractPhoneNumber(extractedText);
 
-            return ResponseEntity.ok("Extracted email: " + email);
+            // You can extract other details like name, address, etc., similarly
+
+            StringBuilder responseBuilder = new StringBuilder();
+            responseBuilder.append("Extracted email: ").append(email).append("\n");
+            responseBuilder.append("Extracted phone number: ").append(phoneNumber);
+
+            return ResponseEntity.ok(responseBuilder.toString());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to process file: " + e.getMessage());
         }

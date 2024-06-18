@@ -14,6 +14,16 @@ public class DataExtractor {
         }
         return null;
     }
+    public static String extractPhoneNumber(String text) {
+        // Regular expression to match common phone number formats
+        String phoneRegex = "(?:(?:\\+|0{0,2})\\d{1,3}[\\s.-]?)?(?:\\(?\\d{3}\\)?[\\s.-]?)?(?:\\d{3}[\\s.-]?\\d{4})";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        Matcher matcher = pattern.matcher(text);
 
+        if (matcher.find()) {
+            return matcher.group(0); // Returns the entire matched phone number
+        }
+        return null;
+    }
     // Similarly, add methods to extract name, phone number, etc.
 }
